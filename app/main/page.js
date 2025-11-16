@@ -1,6 +1,6 @@
 import { auth } from "@/auth"
 import { redirect } from "next/navigation"
-import { cookies } from "next/headers"
+import { cookies, headers } from "next/headers"
 
 export default async function BlogsPage() {
   const session = await auth()
@@ -9,9 +9,14 @@ export default async function BlogsPage() {
     redirect("/signin")
   }
   
+  const headersList = await headers()
+  const host = headersList.get('host')
+  const protocol = headersList.get('x-forwarded-proto') || 'http'
+  const baseUrl = `${protocol}://${host}`
+  
   const cookieStore = await cookies()
   const cookieHeader = cookieStore.getAll().map(c => `${c.name}=${c.value}`).join('; ')
-  const response = await fetch(`https://jsonplaceholder.typicode.com/posts`, {
+  const response = await fetch(`${baseUrl}/api/blogs`, {
     cache: "no-store",
     headers: {
       'Cookie': cookieHeader
