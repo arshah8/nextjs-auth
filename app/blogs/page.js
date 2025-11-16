@@ -3,15 +3,12 @@ import { redirect } from "next/navigation"
 import { cookies } from "next/headers"
 
 export default async function BlogsPage() {
-  // Server-side session validation
   const session = await auth()
   
-  // Redirect to signin if no session exists
   if (!session) {
     redirect("/signin")
   }
   
-  // Fetch blogs from API route
   const cookieStore = await cookies()
   const cookieHeader = cookieStore.getAll().map(c => `${c.name}=${c.value}`).join('; ')
   const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000'

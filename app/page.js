@@ -4,10 +4,8 @@ import { redirect } from 'next/navigation'
 import Link from 'next/link'
 
 export default async function HomePage() {
-  // Server-side session validation
   const session = await auth()
   
-  // Redirect to signin if no session exists
   if (!session) {
     redirect("/signin")
   }
@@ -16,7 +14,6 @@ export default async function HomePage() {
     <div className="min-h-screen bg-gray-50">
       <div className="container mx-auto px-4 py-16">
         <div className="max-w-4xl mx-auto">
-          {/* Welcome Section */}
           <div className="text-center mb-12">
             <h1 className="text-4xl font-semibold text-gray-900 mb-4">
               Welcome
@@ -26,7 +23,6 @@ export default async function HomePage() {
             </p>
           </div>
 
-          {/* Blog Directory Card */}
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
             <div className="flex flex-col md:flex-row items-center justify-between gap-6">
               <div className="flex-1">

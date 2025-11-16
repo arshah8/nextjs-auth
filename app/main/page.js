@@ -4,21 +4,34 @@ import Link from "next/link"
 import { cookies } from "next/headers"
 
 export default async function MainPage() {
-  // Server-side session validation
   const session = await auth()
   
-  // Redirect to signin if no session exists
   if (!session) {
     redirect("/signin")
   }
 
-  // Fetch blogs from API route on the server
   try {
     const cookieStore = await cookies()
     const cookieHeader = cookieStore.getAll().map(c => `${c.name}=${c.value}`).join('; ')
-    const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000'
+    
+    let baseUrl = process.env.NEXTAUTH_URL
+    
+    if (!baseUrl && process.env.VERCEL_URL) {
+      baseUrl = `https://${process.env.VERCEL_URL}`
+    }
+    
+    if (!baseUrl) {
+      baseUrl = process.env.NODE_ENV === 'production' 
+        ? null
+        : 'http://localhost:3000'
+    }
+    
+    if (!baseUrl) {
+      throw new Error('Base URL is not configured. Please set NEXTAUTH_URL environment variable.')
+    }
+    
     const response = await fetch(`${baseUrl}/api/blogs`, {
-      cache: "no-store", // Ensure fresh data on each request
+      cache: "no-store", 
       headers: {
         'Cookie': cookieHeader
       }

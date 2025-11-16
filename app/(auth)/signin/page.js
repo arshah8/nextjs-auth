@@ -5,7 +5,6 @@ import { redirect } from "next/navigation"
 export default async function SignIn() {
   const session = await auth()
   
-  // Redirect to home if already logged in
   if (session) {
     redirect("/")
   }
@@ -13,7 +12,6 @@ export default async function SignIn() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 px-4">
       <div className="w-full max-w-md">
-        {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-3xl font-semibold text-gray-900 mb-2">
             Sign In
@@ -23,7 +21,6 @@ export default async function SignIn() {
           </p>
         </div>
 
-        {/* Sign In Card */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
           <div className="space-y-4">
             <form

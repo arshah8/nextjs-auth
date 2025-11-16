@@ -3,7 +3,6 @@ import { auth } from "@/auth"
 export async function GET(request) {
     const session = await auth()
     
-    // Require authentication - return 401 if not authenticated
     if (!session) {
         return new Response(JSON.stringify({
             error: 'Unauthorized',
@@ -15,9 +14,8 @@ export async function GET(request) {
     }
     
     try {
-        // Fetch blogs from JSONPlaceholder API
         const response = await fetch('https://jsonplaceholder.typicode.com/posts', {
-            cache: 'no-store', // Ensure fresh data on each request
+            cache: 'no-store',
         })
         
         if (!response.ok) {
@@ -26,9 +24,7 @@ export async function GET(request) {
         
         const posts = await response.json()
         
-        // Transform the data to match expected format
         const blogs = posts.map((post) => {
-            // Create excerpt from body (first 100 characters)
             const excerpt = post.body.length > 100 
                 ? post.body.substring(0, 100).trim() + '...'
                 : post.body
@@ -39,7 +35,7 @@ export async function GET(request) {
                 excerpt: excerpt,
                 content: post.body,
                 author: `User ${post.userId}`,
-                publishedAt: new Date(Date.now() - Math.random() * 10000000000).toISOString().split('T')[0] // Random date for demo
+                publishedAt: new Date(Date.now() - Math.random() * 10000000000).toISOString().split('T')[0]
             }
         })
         
@@ -69,7 +65,6 @@ export async function GET(request) {
 export async function POST(request) {
     const session = await auth()
     
-    // Only authenticated users can create blogs
     if (!session) {
         return new Response(JSON.stringify({
             error: 'Unauthorized',
@@ -83,7 +78,6 @@ export async function POST(request) {
     try {
         const body = await request.json()
         
-        // In a real app, you would save this to a database
         const newBlog = {
             id: Date.now(),
             title: body.title || 'Untitled',
